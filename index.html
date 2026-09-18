@@ -1,0 +1,375 @@
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- 修改这里：文章 SEO 基础信息 -->
+  <title>GPT中转站怎么用？国内 GPT API 中转接入完整教程｜网站名称</title>
+  <meta name="description" content="GPT中转站怎么用？本文围绕 GPT中转站、GPT API中转站、GPT API 调用、OpenAI API 中转、国内大模型 API 接入等关键词，详细介绍大模型中转 API 的作用、适用场景、接入步骤、cURL 与 Python 示例、模型选择和常见问题。">
+  <meta name="keywords" content="GPT中转站,GPT API中转站,GPT API,GPT调用,GPT接口,OpenAI API中转,ChatGPT API中转,国内GPT API,大模型API中转,AI API中转站,OpenAI兼容接口,大模型接口调用">
+  <meta name="author" content="作者名称">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://example.com/articles/api-guide.html">
+
+  <!-- 修改这里：社交平台分享信息 -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ai api">
+  <meta property="og:title" content="GPT中转站怎么用？国内 GPT API 中转接入完整教程｜网站名称">
+  <meta property="og:description" content="GPT中转站怎么用？本文围绕 GPT中转站、GPT API中转站、GPT API 调用、OpenAI API 中转、国内大模型 API 接入等关键词，详细介绍大模型中转 API 的作用、适用场景、接入步骤、cURL 与 Python 示例、模型选择和常见问题。">
+  <meta property="og:url" content="https://example.com/articles/api-guide.html">
+  <meta property="og:image" content="https://quanzil.com/images/article-cover.jpg">
+  <meta property="og:locale" content="zh_CN">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GPT中转站怎么用？国内 GPT API 中转接入完整教程｜网站名称">
+  <meta name="twitter:description" content="GPT中转站怎么用？本文围绕 GPT中转站、GPT API中转站、GPT API 调用、OpenAI API 中转、国内大模型 API 接入等关键词，详细介绍大模型中转 API 的作用、适用场景、接入步骤、cURL 与 Python 示例、模型选择和常见问题。">
+  <meta name="twitter:image" content="https://quanzil.com/images/article-cover.jpg">
+
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --surface: #fff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --code-bg: #111827;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.8;
+    }
+    a { color: var(--accent); }
+    .site-header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.97);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+    .header-inner, .page, .site-footer {
+      width: min(100% - 32px, 1100px);
+      margin: 0 auto;
+    }
+    .header-inner {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: max-content;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, .2);
+    }
+    .brand-copy {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+    .brand {
+      color: var(--text);
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .brand-tagline {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+      margin-right: 22px;
+    }
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 0 11px;
+      border-radius: 7px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      white-space: nowrap;
+      transition: color .2s ease, background .2s ease;
+    }
+    .nav-link:hover, .nav-link.active {
+      background: #f1f5f9;
+      color: var(--text);
+    }
+    .page { padding: 56px 0 72px; }
+    .article {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: clamp(24px, 5vw, 64px);
+      box-shadow: 0 8px 30px rgba(15, 23, 42, .04);
+    }
+    .article-header { margin-bottom: 40px; }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    h1 {
+      margin: 0 0 16px;
+      color: #111827;
+      font-size: clamp(30px, 5vw, 46px);
+      line-height: 1.25;
+      letter-spacing: -.02em;
+    }
+    .summary {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .header-target {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 16px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+      box-shadow: 0 3px 10px rgba(37, 99, 235, .18);
+      transition: background .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+    .header-target:hover {
+      background: #1d4ed8;
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(37, 99, 235, .25);
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .markdown-body { font-size: 17px; }
+    .markdown-body h2, .markdown-body h3, .markdown-body h4 {
+      margin: 2em 0 .7em;
+      color: #111827;
+      line-height: 1.35;
+    }
+    .markdown-body h2 {
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+      font-size: 28px;
+    }
+    .markdown-body h3 { font-size: 22px; }
+    .markdown-body p, .markdown-body ul, .markdown-body ol, .markdown-body blockquote { margin: 1em 0; }
+    .markdown-body img { max-width: 100%; height: auto; border-radius: 8px; }
+    .markdown-body blockquote {
+      margin-left: 0;
+      padding: 12px 18px;
+      border-left: 3px solid var(--accent);
+      background: var(--accent-light);
+      color: #374151;
+    }
+    .markdown-body code {
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: #f3f4f6;
+      font-size: .9em;
+    }
+    .markdown-body pre {
+      overflow-x: auto;
+      padding: 18px;
+      border-radius: 8px;
+      background: var(--code-bg);
+      color: #e5e7eb;
+      line-height: 1.6;
+    }
+    .markdown-body pre code { padding: 0; background: transparent; color: inherit; }
+    .markdown-body table { display: block; overflow-x: auto; border-collapse: collapse; width: 100%; }
+    .markdown-body th, .markdown-body td { padding: 9px 12px; border: 1px solid var(--line); text-align: left; }
+    .markdown-body th { background: #f9fafb; }
+    .site-footer { padding: 24px 0 48px; color: var(--muted); font-size: 13px; text-align: center; }
+    @media (max-width: 640px) {
+      .header-inner { min-height: 56px; }
+      .brand-tagline, .main-nav { display: none; }
+      .page { padding: 24px 0 40px; }
+      .article { padding: 22px 18px; }
+      .markdown-body { font-size: 16px; }
+      .header-actions { gap: 10px; }
+      .header-target { padding: 8px 11px; font-size: 13px; }
+      .brand-mark { width: 31px; height: 31px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a id="site-brand" class="brand-wrap" href="https://quanzil.com/" aria-label="返回网站首页">
+        <span id="brand-mark" class="brand-mark">AI</span>
+        <span class="brand-copy">
+          <span id="brand-name" class="brand">AI agent</span>
+          <span id="brand-tagline" class="brand-tagline">让技术更简单</span>
+        </span>
+      </a>
+      <nav class="main-nav" aria-label="主导航">
+        <a id="nav-home" class="nav-link active" href="https://quanzil.com/">首页</a>
+        <a id="nav-articles" class="nav-link" href="https://quanzil.com/pricing">模型价格</a>
+        <a id="nav-docs" class="nav-link" href="https://docs.quanzil.com/">API 文档</a>
+        <a id="nav-pricing" class="nav-link" href="https://quanzil.com/news/focus">文章资讯</a>
+      </nav>
+      <div class="header-actions">
+        <a id="header-target" class="header-target" href="https://quanzil.com/" target="_blank" rel="noopener noreferrer">进入 API 中转站 →</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <article class="article" itemscope itemtype="https://schema.org/Article">
+      <header class="article-header">
+        <p class="eyebrow">原创文章</p>
+        <h1 id="article-title" itemprop="headline">文章标题</h1>
+        <p id="article-summary" class="summary" itemprop="description">文章摘要</p>
+        <div class="meta">
+          <span>作者：<span id="article-author" itemprop="author">作者名称</span></span>
+          <span>发布时间：<time id="publish-date" itemprop="datePublished" datetime="2026-09-18">2026年09月18日</time></span>
+          <span>更新时间：<time id="update-date" itemprop="dateModified"></time></span>
+        </div>
+      </header>
+
+      <!-- 把 AI 生成的 Markdown 粘贴到下面这段 script 中，保留开始和结束标签。 -->
+      <div id="markdown-content" class="markdown-body" itemprop="articleBody"></div>
+      <script type="application/json" id="article-markdown">
+"很多开发者在搜索 **GPT中转站**、**GPT API中转站**、**GPT API**、**GPT调用**、**GPT接口** 的时候，其实想解决的问题很直接：\n\n\u003e 我想在国内项目里调用 GPT 或其他大模型 API，到底应该怎么接入？\n\n如果你正在做：\n\n- AI 聊天机器人\n- 智能客服\n- AI 写作工具\n- 知识库问答\n- 企业内部 Copilot\n- 小程序 AI 助手\n- 网站 AI 客服\n- AI 工具站\n- 自动化内容生成系统\n\n那么你大概率会用到 **大模型 API**。\n\n但在实际开发中，很多人会遇到这些问题：\n\n- 不知道 GPT API 怎么申请和调用\n- 不清楚 Base URL 应该填什么\n- 不知道 OpenAI SDK 怎么配置\n- 多个模型接口格式不统一\n- 后续想接 Claude、Gemini、DeepSeek 时改动很大\n- 想降低接入成本，但不知道怎么选方案\n\n这时候，**GPT API 中转站** 或 **大模型 API 中转平台** 就很适合开发者使用。\n\n如果你想快速接入，可以查看：\n\n\u003e AI API 中转站平台：\u003chttps://quanzil.com\u003e\n\n\u003e AI API 中转站平台：\u003chttps://quanzil.net\u003e\n\n本文会从零开始讲清楚：\n\n1. GPT中转站是什么\n2. GPT API中转站有什么用\n3. 国内开发者为什么需要 GPT API 中转\n4. GPT API 怎么调用\n5. cURL、Python、OpenAI SDK 示例\n6. 如何选择模型\n7. 常见报错怎么处理\n\n---\n\n## 一、GPT中转站是什么？\n\n**GPT中转站**，也叫：\n\n- GPT API 中转站\n- OpenAI API 中转站\n- ChatGPT API 中转站\n- 大模型 API 中转平台\n- AI API 中转站\n- OpenAI 兼容接口平台\n\n它的核心作用是：\n\n\u003e 提供一个统一的 API 接口，让开发者更方便地调用 GPT 以及其他大模型能力。\n\n简单来说，GPT中转站相当于在开发者和大模型服务之间增加了一层统一接入入口。\n\n开发者不需要分别研究每个模型厂商的接口文档，而是可以通过类似 OpenAI 的接口格式来调用不同模型。\n\n例如：\n\n```json\n{\n  \"model\": \"gpt-4o-mini\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"请介绍一下 GPT中转站是什么\"\n    }\n  ]\n}\n```\n\n如果平台兼容 OpenAI API 格式，那么开发者通常只需要修改：\n\n- `api_key`\n- `base_url`\n- `model`\n\n就可以完成调用。\n\n---\n\n## 二、GPT API中转站有什么用？\n\nGPT API中转站的价值主要体现在四个方面：\n\n1. 降低接入门槛\n2. 统一接口格式\n3. 方便切换模型\n4. 降低后期维护成本\n\n下面分别解释。\n\n---\n\n### 1. 降低 GPT API 接入门槛\n\n对于新手开发者来说，第一次调用 GPT API 时，最容易卡在这些地方：\n\n- API Key 怎么用\n- 请求地址怎么写\n- Header 怎么配置\n- `messages` 格式怎么组织\n- SDK 的 `base_url` 怎么设置\n- 返回数据怎么解析\n\n如果使用兼容 OpenAI 格式的 GPT中转站，整体接入流程会更简单。\n\n通常只需要：\n\n1. 注册并获取 API Key\n2. 查看平台提供的 API 地址\n3. 使用 OpenAI 兼容格式发送请求\n4. 获取模型返回结果\n\n对于想快速上线 AI 功能的团队来说，这种方式可以节省很多时间。\n\n---\n\n### 2. 统一 GPT、Claude、Gemini 等模型接口\n\n很多开发者一开始只想调用 GPT API。\n\n但项目做着做着，可能会发现还需要：\n\n- Claude 模型\n- Gemini 模型\n- DeepSeek 模型\n- Qwen 模型\n- 图像生成模型\n- Embedding 向量模型\n- 多模态视觉模型\n\n如果每个模型都单独接入，代码会越来越复杂。\n\n使用大模型 API 中转站的好处是，可以通过统一格式调用多个模型。\n\n这对于需要长期维护 AI 产品的团队非常重要。\n\n---\n\n### 3. 更方便切换模型\n\n在实际业务中，不同任务适合不同模型。\n\n例如：\n\n- 普通聊天：使用轻量模型\n- 高质量写作：使用更强模型\n- 代码生成：使用代码能力更强的模型\n- 知识库问答：使用 Embedding + Chat 模型\n- 图像任务：使用图像模型\n\n如果你使用统一的 GPT API 中转接口，后续切换模型可能只需要改一个参数：\n\n```json\n\"model\": \"gpt-4o-mini\"\n```\n\n改成：\n\n```json\n\"model\": \"gpt-4o\"\n```\n\n或者改成平台支持的其他模型名称。\n\n这种方式特别适合做模型效果测试和成本优化。\n\n---\n\n### 4. 降低维护成本\n\n如果你的项目未来要支持多个模型，最麻烦的不是第一次接入，而是后续维护。\n\n你可能需要处理：\n\n- 不同模型的请求格式\n- 不同平台的鉴权方式\n- 不同返回结构\n- 不同错误码\n- 不同计费方式\n- 不同 SDK 版本\n\n而 GPT API 中转站可以帮助你统一很多底层差异，让业务代码更稳定。\n\n---\n\n## 三、哪些项目适合使用 GPT中转站？\n\nGPT中转站适合大多数需要调用大模型 API 的项目。\n\n尤其适合以下场景。\n\n---\n\n### 1. AI 聊天机器人\n\n这是最常见的 GPT API 调用场景。\n\n你可以把 GPT 接入：\n\n- 网站聊天窗口\n- App 聊天助手\n- 小程序机器人\n- Telegram 机器人\n- Discord 机器人\n- 微信机器人\n- 企业内部助手\n\n通过 GPT API，中转站可以让你的机器人具备自然语言理解和回答能力。\n\n---\n\n### 2. 智能客服\n\n很多企业希望使用 GPT API 做智能客服。\n\n常见功能包括：\n\n- 自动回答常见问题\n- 辅助客服生成回复\n- 产品介绍\n- 售前咨询\n- 售后问题处理\n- 工单内容总结\n- 用户意图识别\n\n如果结合企业知识库，还可以实现更准确的问答效果。\n\n---\n\n### 3. AI 写作和内容生成\n\nGPT API 非常适合做内容生成类产品。\n\n例如：\n\n- SEO 文章生成\n- 小红书文案生成\n- 公众号文章生成\n- 商品详情生成\n- 广告文案生成\n- 邮件写作\n- 视频脚本生成\n- 标题生成\n- 内容改写和润色\n\n这类应用通常调用量较高，因此模型成本和稳定性都很重要。\n\n---\n\n### 4. 知识库问答\n\n知识库问答是现在很热门的 AI 应用方向。\n\n典型流程是：\n\n1. 上传文档\n2. 文档切分\n3. 生成向量\n4. 存入向量数据库\n5. 用户提问\n6. 检索相关内容\n7. 调用 GPT API 生成回答\n\n在这个过程中，通常会用到：\n\n- Embedding 模型\n- Chat 模型\n- 文档解析服务\n- 向量数据库\n\n如果通过大模型 API 中转站统一接入，会更方便管理模型调用。\n\n---\n\n### 5. AI 编程助手\n\n开发者工具也经常使用 GPT API。\n\n常见功能包括：\n\n- 代码生成\n- 代码解释\n- Bug 分析\n- SQL 生成\n- 单元测试生成\n- 代码重构建议\n- API 文档生成\n- 正则表达式生成\n\n这类任务对模型能力要求比较高，可以根据效果选择更适合的模型。\n\n---\n\n### 6. 多模态 AI 应用\n\n除了文本对话，现在很多产品还需要图像能力。\n\n例如：\n\n- 图片理解\n- 图片问答\n- OCR 辅助识别\n- 文生图\n- 图片编辑\n- 商品图生成\n- 营销海报生成\n\n如果 GPT API 中转站支持图像模型和多模态模型，开发者就可以在同一个平台里接入更多 AI 能力。\n\n---\n\n## 四、GPT API中转站的基本调用流程\n\n无论你是做聊天机器人、智能客服，还是知识库问答，GPT API 的基本调用逻辑都很类似。\n\n通常分为五步：\n\n1. 获取 API Key\n2. 配置 Base URL\n3. 选择模型\n4. 构造 messages\n5. 发送请求并解析返回结果\n\n---\n\n## 五、准备 API Key\n\nAPI Key 是调用 GPT API 的身份凭证。\n\n请求时通常放在 Header 中：\n\n```bash\nAuthorization: Bearer YOUR_API_KEY\n```\n\n注意事项：\n\n- 不要把 API Key 写在前端代码里\n- 不要把 API Key 上传到 GitHub\n- 不要在日志里打印完整 Key\n- 建议使用环境变量保存 Key\n- 生产环境建议做好权限和额度控制\n\n例如：\n\n```bash\nexport OPENAI_API_KEY=\"YOUR_API_KEY\"\n```\n\n---\n\n## 六、准备 Base URL\n\n如果你使用的是 OpenAI 兼容格式，中转接口一般会提供类似这样的地址：\n\n```bash\nhttps://jeniya.cn/v1/chat/completions\n```\n\n如果使用 SDK，则通常配置为：\n\n```bash\nhttps://jeniya.cn/v1\n```\n\n具体地址以平台文档为准。\n\n如果你需要查看平台和开发文档，可以访问：\n\n\u003e \u003chttps://quanzil.com\u003e\n\n\u003e \u003chttps://quanzil.net\u003e\n\n---\n\n## 七、cURL 调用 GPT API 示例\n\n下面是一个最小可用的 GPT API 请求示例。\n\n```bash\ncurl https://jeniya.cn/v1/chat/completions \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n  -d '{\n    \"model\": \"gpt-4o-mini\",\n    \"messages\": [\n      {\n        \"role\": \"system\",\n        \"content\": \"你是一个专业、简洁的中文 AI 助手。\"\n      },\n      {\n        \"role\": \"user\",\n        \"content\": \"请用一句话解释什么是 GPT API 中转站。\"\n      }\n    ],\n    \"temperature\": 0.7\n  }'\n```\n\n这个请求中最重要的字段是：\n\n- `model`：指定调用哪个模型\n- `messages`：传入对话内容\n- `Authorization`：传入 API Key\n- `Content-Type`：声明请求体为 JSON\n\n---\n\n## 八、Python 调用 GPT API 示例\n\n下面是使用 Python `requests` 调用 GPT API 的示例。\n\n```python\nimport requests\n\nurl = \"https://jeniya.cn/v1/chat/completions\"\napi_key = \"YOUR_API_KEY\"\n\nheaders = {\n    \"Content-Type\": \"application/json\",\n    \"Authorization\": f\"Bearer {api_key}\"\n}\n\npayload = {\n    \"model\": \"gpt-4o-mini\",\n    \"messages\": [\n        {\n            \"role\": \"system\",\n            \"content\": \"你是一个专业、简洁的中文 AI 助手。\"\n        },\n        {\n            \"role\": \"user\",\n            \"content\": \"请介绍 GPT中转站的主要作用。\"\n        }\n    ],\n    \"temperature\": 0.7\n}\n\nresponse = requests.post(url, headers=headers, json=payload, timeout=60)\n\nprint(response.status_code)\nprint(response.json())\n```\n\n这个示例适合快速测试接口是否可用。\n\n如果返回状态码是 `200`，说明请求成功。\n\n---\n\n## 九、使用 OpenAI SDK 调用 GPT中转站\n\n如果 GPT API 中转站兼容 OpenAI SDK，那么你可以通过配置 `base_url` 的方式调用。\n\nPython 示例：\n\n```python\nfrom openai import OpenAI\n\nclient = OpenAI(\n    api_key=\"YOUR_API_KEY\",\n    base_url=\"https://jeniya.cn/v1\"\n)\n\ncompletion = client.chat.completions.create(\n    model=\"gpt-4o-mini\",\n    messages=[\n        {\n            \"role\": \"system\",\n            \"content\": \"你是一个专业的中文技术助手。\"\n        },\n        {\n            \"role\": \"user\",\n            \"content\": \"GPT API中转站适合哪些场景？\"\n        }\n    ],\n    temperature=0.7\n)\n\nprint(completion.choices[0].message.content)\n```\n\n这种方式非常适合已经使用 OpenAI SDK 的项目。\n\n通常只需要改三个地方：\n\n```python\napi_key=\"YOUR_API_KEY\"\nbase_url=\"https://jeniya.cn/v1\"\nmodel=\"gpt-4o-mini\"\n```\n\n---\n\n## 十、GPT API 请求参数说明\n\n很多新手第一次接入 GPT API 时，不清楚请求参数是什么意思。\n\n下面解释几个常见字段。\n\n---\n\n### 1. model\n\n`model` 表示要调用的模型名称。\n\n例如：\n\n```json\n\"model\": \"gpt-4o-mini\"\n```\n\n模型会影响：\n\n- 回答质量\n- 响应速度\n- 调用成本\n- 上下文长度\n- 是否支持多模态\n\n如果刚开始接入，建议先使用轻量模型测试，等业务跑通后再切换更强模型。\n\n---\n\n### 2. messages\n\n`messages` 是对话上下文数组。\n\n例如：\n\n```json\n\"messages\": [\n  {\n    \"role\": \"system\",\n    \"content\": \"你是一个专业客服助手。\"\n  },\n  {\n    \"role\": \"user\",\n    \"content\": \"请介绍你们的产品优势。\"\n  }\n]\n```\n\n它可以包含多轮对话内容。\n\n---\n\n### 3. role\n\n`role` 表示消息角色。\n\n常见值包括：\n\n- `system`：系统设定\n- `user`：用户输入\n- `assistant`：模型回复\n\n例如：\n\n```json\n{\n  \"role\": \"system\",\n  \"content\": \"你必须使用简体中文回答，并且回答要简洁。\"\n}\n```\n\n`system` 通常用来定义模型的行为规则。\n\n---\n\n### 4. content\n\n`content` 是消息正文。\n\n例如：\n\n```json\n{\n  \"role\": \"user\",\n  \"content\": \"帮我写一段产品介绍文案。\"\n}\n```\n\n用户真正想让模型完成的任务，一般就写在 `content` 中。\n\n---\n\n### 5. temperature\n\n`temperature` 控制模型回答的随机性。\n\n一般来说：\n\n- 值越低，回答越稳定\n- 值越高，回答越发散\n\n常见设置：\n\n```json\n\"temperature\": 0.7\n```\n\n建议：\n\n- 客服问答：0.2 - 0.5\n- 知识库问答：0.1 - 0.4\n- 创意写作：0.7 - 1.0\n- 营销文案：0.7 左右\n\n---\n\n### 6. max_tokens\n\n`max_tokens` 用于限制最大输出长度。\n\n例如：\n\n```json\n\"max_tokens\": 1000\n```\n\n合理设置 `max_tokens` 可以控制输出长度，也能帮助控制 token 成本。\n\n---\n\n### 7. stream\n\n`stream` 表示是否开启流式输出。\n\n例如：\n\n```json\n\"stream\": true\n```\n\n如果你在做聊天机器人，建议开启流式输出。\n这样用户可以看到内容逐步生成，体验更接近 ChatGPT。\n\n---\n\n## 十一、GPT API 模型怎么选？\n\n选择模型时，不要只问“哪个模型最好”，而要看业务场景。\n\n可以按下面思路选择。\n\n---\n\n### 1. 轻量模型：适合高频、低成本任务\n\n轻量模型通常适合：\n\n- 普通聊天\n- 简单问答\n- 文本分类\n- 内容改写\n- 标题生成\n- 基础摘要\n- 早期产品验证\n\n优点是：\n\n- 响应快\n- 成本低\n- 适合大量调用\n\n如果你刚开始使用 GPT API 中转站，建议优先从轻量模型开始测试。\n\n---\n\n### 2. 高质量模型：适合核心业务\n\n更强的模型适合：\n\n- 高质量内容生成\n- 复杂逻辑推理\n- 长文档理解\n- 代码生成\n- 企业级智能客服\n- 重要业务决策辅助\n\n这类模型的效果通常更好，但成本也会更高。\n\n建议放在核心场景使用，而不是所有请求都默认使用最高级模型。\n\n---\n\n### 3. Embedding 模型：适合知识库和语义搜索\n\n如果你要做知识库问答，Embedding 模型非常重要。\n\n它常用于：\n\n- 文档向量化\n- 语义搜索\n- 相似问题匹配\n- RAG 检索增强生成\n- 企业资料问答\n\n知识库场景通常是：\n\n```text\n用户问题 -\u003e 向量检索 -\u003e 找到相关文档 -\u003e 调用 GPT 生成回答\n```\n\n所以不要只关注聊天模型，也要关注 Embedding 模型。\n\n---\n\n### 4. 图像模型：适合图片生成和视觉理解\n\n如果你的产品涉及图片任务，需要选择图像模型或多模态模型。\n\n常见场景包括：\n\n- 文生图\n- 图片编辑\n- 图片理解\n- 图片问答\n- 商品图生成\n- 海报生成\n- 视觉内容分析\n\n不同模型能力不同，实际使用时要根据平台支持情况选择。\n\n---\n\n## 十二、GPT中转站和官方 API 有什么区别？\n\n很多开发者会问：\n\n\u003e GPT中转站和官方 API 有什么区别？\n\n可以从以下几个方面理解。\n\n---\n\n### 1. 接入方式不同\n\n官方 API 是直接调用模型厂商接口。\n\nGPT中转站则提供统一入口，帮助开发者通过兼容格式调用模型。\n\n如果中转站兼容 OpenAI 格式，那么调用体验会和 OpenAI API 比较接近。\n\n---\n\n### 2. 模型范围不同\n\n官方 API 一般主要提供自家模型。\n\n而大模型 API 中转平台可能支持多个模型系列，例如：\n\n- GPT\n- Claude\n- Gemini\n- DeepSeek\n- Qwen\n- Llama\n- 图像模型\n- Embedding 模型\n\n这样开发者可以在一个平台里测试不同模型。\n\n---\n\n### 3. 切换成本不同\n\n如果你只用一个模型，直接接官方 API 也可以。\n\n但如果你未来要支持多个模型，中转站的优势会更明显。\n\n因为你可以用统一格式管理多个模型调用。\n\n---\n\n### 4. 适用场景不同\n\n官方 API 更适合：\n\n- 深度依赖官方生态的项目\n- 需要使用官方最新功能的团队\n- 有较强 API 适配能力的团队\n\nGPT中转站更适合：\n\n- 想快速接入 GPT API 的开发者\n- 需要多模型切换的项目\n- 想减少适配成本的团队\n- 做 AI 工具站或 SaaS 产品的开发者\n- 需要统一管理模型接口的企业\n\n---\n\n## 十三、GPT API 调用常见错误\n\n### 1. 401 Unauthorized\n\n`401` 通常表示鉴权失败。\n\n常见原因：\n\n- API Key 填错\n- Authorization 格式错误\n- 没有加 Bearer\n- Key 已失效\n- 请求地址错误\n- 当前 Key 没有模型权限\n\n正确格式：\n\n```bash\nAuthorization: Bearer YOUR_API_KEY\n```\n\n---\n\n### 2. 400 Bad Request\n\n`400` 通常表示请求参数错误。\n\n常见原因：\n\n- JSON 格式错误\n- `model` 名称错误\n- `messages` 格式错误\n- `content` 为空\n- 参数类型不正确\n\n建议先用最小请求测试，确认基础格式没问题。\n\n---\n\n### 3. 429 Too Many Requests\n\n`429` 通常表示请求频率过高或额度限制。\n\n可能原因：\n\n- 并发过高\n- 请求太频繁\n- 余额不足\n- 模型限流\n- 短时间内重复调用太多\n\n处理建议：\n\n- 降低并发\n- 增加重试机制\n- 做请求队列\n- 检查账户余额\n- 对重复问题做缓存\n\n---\n\n### 4. 500 Server Error\n\n`500` 通常表示服务端异常。\n\n建议：\n\n- 稍后重试\n- 检查请求日志\n- 增加超时机制\n- 增加失败重试\n- 必要时切换备用模型\n\n---\n\n## 十四、GPT API 成本怎么控制？\n\nGPT API 通常按 token 计费。\n\n影响成本的因素包括：\n\n- 输入内容长度\n- 输出内容长度\n- 上下文历史长度\n- 模型单价\n- 调用频率\n- 是否使用多模态能力\n\n下面是几个实用建议。\n\n---\n\n### 1. 不要保留过多历史对话\n\n多轮对话如果一直把历史全部传给模型，token 会越来越多。\n\n建议：\n\n- 只保留最近几轮对话\n- 对历史内容做摘要\n- 删除无关上下文\n- 重要信息单独结构化存储\n\n---\n\n### 2. 给输出设置长度限制\n\n可以通过 `max_tokens` 控制输出长度。\n\n例如：\n\n```json\n\"max_tokens\": 800\n```\n\n这样可以避免模型输出过长，导致成本上升。\n\n---\n\n### 3. 不同任务使用不同模型\n\n不要所有任务都使用最贵模型。\n\n可以这样分配：\n\n- 简单分类：轻量模型\n- 普通聊天：轻量或中等模型\n- 高质量写作：更强模型\n- 复杂推理：高质量模型\n- 知识库问答：Embedding + Chat 模型\n- 图片任务：图像模型\n\n---\n\n### 4. 对重复问题做缓存\n\n如果你的业务里有很多重复请求，可以增加缓存。\n\n例如：\n\n- 常见问题回答\n- 固定产品介绍\n- 标准客服回复\n- 高频分类任务\n\n这样可以减少不必要的 API 调用。\n\n---\n\n## 十五、如何选择 GPT API中转站？\n\n选择 GPT中转站时，不建议只看价格，还要看整体能力。\n\n建议重点关注以下几点。\n\n---\n\n### 1. 是否兼容 OpenAI 格式\n\n这是最重要的因素之一。\n\n如果平台兼容 OpenAI 格式，你可以更方便地：\n\n- 使用 OpenAI SDK\n- 迁移现有代码\n- 接入聊天接口\n- 切换模型\n- 封装统一调用层\n\n---\n\n### 2. 是否支持多模型\n\n一个实用的大模型 API 中转平台，最好支持多种模型类型。\n\n例如：\n\n- GPT 模型\n- Claude 模型\n- Gemini 模型\n- DeepSeek 模型\n- Qwen 模型\n- 图像模型\n- Embedding 模型\n\n模型越丰富，后续业务扩展越方便。\n\n---\n\n### 3. 文档是否清晰\n\n开发文档直接影响接入效率。\n\n建议关注文档是否包含：\n\n- API 地址\n- 鉴权方式\n- 请求示例\n- 返回示例\n- SDK 示例\n- 模型列表\n- 错误码说明\n- 价格说明\n\n---\n\n### 4. 计费是否透明\n\n计费透明很重要。\n\n建议确认：\n\n- 不同模型价格是否清楚\n- 输入输出是否分开计费\n- 是否能查看调用记录\n- 是否能查看消耗明细\n- 是否方便控制预算\n\n---\n\n### 5. 接口是否稳定\n\n稳定性直接影响产品体验。\n\n可以关注：\n\n- 请求成功率\n- 响应速度\n- 高峰期表现\n- 超时情况\n- 并发限制\n- 是否支持备用模型\n\n---\n\n## 十六、GPT API中转接入最佳实践\n\n如果你准备在真实项目中使用 GPT API，建议按照以下步骤。\n\n---\n\n### 第一步：先跑通最小请求\n\n先不要一上来就做复杂系统。\n\n建议先用 cURL 或 Python 测试：\n\n- API Key 是否正确\n- Base URL 是否正确\n- 模型是否能正常返回\n- 返回结构是否符合预期\n\n---\n\n### 第二步：封装统一调用方法\n\n不要在业务代码里到处写请求逻辑。\n\n建议封装一个统一方法，例如：\n\n```python\ndef call_gpt(prompt):\n    pass\n```\n\n后续如果需要切换模型或接口，只改一个地方。\n\n---\n\n### 第三步：增加错误处理\n\n生产环境至少要处理：\n\n- 400\n- 401\n- 429\n- 500\n- timeout\n\n不要让 API 异常直接影响用户体验。\n\n---\n\n### 第四步：记录调用日志\n\n建议记录：\n\n- 调用时间\n- 使用模型\n- 请求状态\n- 响应耗时\n- token 消耗\n- 错误信息\n\n这些数据后续可以帮助你优化成本和稳定性。\n\n---\n\n### 第五步：根据业务逐步优化模型\n\n不要一开始就选择最贵模型。\n\n建议流程是：\n\n1. 先用轻量模型跑通功能\n2. 用真实业务数据测试效果\n3. 对关键场景切换更强模型\n4. 对高频低价值任务控制成本\n5. 定期分析调用日志和费用\n\n---\n\n## 十七、常见问题 FAQ\n\n### GPT中转站是什么？\n\nGPT中转站是一个帮助开发者通过统一 API 接口调用 GPT、大模型或 AI 服务的平台，通常兼容 OpenAI API 格式。\n\n---\n\n### GPT API中转站怎么用？\n\n一般流程是：获取 API Key，配置 Base URL，选择模型，按照 OpenAI 兼容格式发送请求，然后解析返回结果。\n\n---\n\n### GPT中转站适合个人开发者吗？\n\n适合。个人开发者可以用它快速开发 AI 工具站、聊天机器人、写作工具、翻译工具、知识库问答等应用。\n\n---\n\n### GPT中转站适合企业项目吗？\n\n适合。企业项目可以用它接入智能客服、内部知识库、自动化办公、销售辅助、文档总结等 AI 功能。\n\n---\n\n### GPT API中转站可以调用哪些模型？\n\n不同平台支持的模型不同，常见包括 GPT、Claude、Gemini、DeepSeek、Qwen、图像模型、Embedding 模型等。\n\n---\n\n### GPT API 调用失败怎么办？\n\n可以先检查：\n\n1. API Key 是否正确\n2. Base URL 是否正确\n3. Authorization 是否包含 Bearer\n4. model 名称是否正确\n5. messages 格式是否正确\n6. 账户余额或额度是否充足\n\n---\n\n### OpenAI SDK 可以调用 GPT中转站吗？\n\n如果平台兼容 OpenAI 格式，一般可以通过配置 `base_url` 的方式使用 OpenAI SDK。\n\n---\n\n## 总结\n\n如果你正在搜索：\n\n- GPT中转站\n- GPT API中转站\n- GPT API\n- GPT调用\n- GPT接口\n- OpenAI API中转\n- 国内 GPT API\n- 大模型 API 中转\n\n那么你真正需要的，通常是一个能够快速接入、统一格式、方便切换模型的大模型 API 服务。\n\nGPT API中转站的核心价值在于：\n\n1. 降低接入门槛\n2. 统一 API 调用格式\n3. 支持多模型切换\n4. 方便开发 AI 应用\n5. 降低后期维护成本\n\n对于开发者来说，最推荐的接入路径是：\n\n1. 先获取 API Key\n2. 用 cURL 跑通最小请求\n3. 再用 Python 或 SDK 接入项目\n4. 从轻量模型开始测试\n5. 根据业务需求优化模型和成本\n\n如果你想快速接入大模型 API，可以查看：\n\n\u003e AI API 中转站平台：\u003chttps://quanzil.com\u003e\n\n\u003e AI API 中转站平台：\u003chttps://quanzil.net\u003e\n\n先跑通接口，再逐步扩展到聊天机器人、智能客服、AI 写作、知识库问答、多模态应用，这通常是最稳妥的开发路线。"
+      </script>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div>© <span id="current-year"></span>  保留所有权利</div>
+  </footer>
+
+  <!-- Markdown 渲染库；如果你的网站不能访问 CDN，可下载 marked.min.js 后改成本地路径。 -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+  <script>
+    // 手动使用时修改以下配置；Excel 批量生成时由 Python 自动填写。
+    const articleConfig = {
+  "title": "GPT中转站怎么用？国内 GPT API 中转接入完整教程",
+  "summary": "GPT中转站怎么用？本文围绕 GPT中转站、GPT API中转站、GPT API 调用、OpenAI API 中转、国内大模型 API 接入等关键词，详细介绍大模型中转 API 的作用、适用场景、接入步骤、cURL 与 Python 示例、模型选择和常见问题。",
+  "author": "quan",
+  "published": "2026-09-18 00:00:00",
+  "canonical": "https://example.com/articles/api-guide.html",
+  "targetUrl": "https://quanzil.com/",
+  "targetLabel": "进入 API 中转站 →",
+  "siteName": "API ",
+  "siteTagline": "让技术更简单",
+  "brandMark": "AI",
+  "homeUrl": "https://quanzil.com/",
+  "articlesUrl": "https://quanzil.com/pricing",
+  "docsUrl": "https://docs.quanzil.com/",
+  "pricingUrl": "https://quanzil.com/news/focus"
+};
+
+    const formatDate = value => new Intl.DateTimeFormat('zh-CN', {
+      year: 'numeric', month: '2-digit', day: '2-digit'
+    }).format(new Date(value));
+
+    document.title = `${articleConfig.title}｜网站名称`;
+    document.getElementById('site-brand').href = articleConfig.homeUrl;
+    document.getElementById('brand-name').textContent = articleConfig.siteName;
+    document.getElementById('brand-tagline').textContent = articleConfig.siteTagline;
+    document.getElementById('brand-mark').textContent = articleConfig.brandMark;
+    document.getElementById('nav-home').href = articleConfig.homeUrl;
+    document.getElementById('nav-articles').href = articleConfig.articlesUrl;
+    document.getElementById('nav-docs').href = articleConfig.docsUrl;
+    document.getElementById('nav-pricing').href = articleConfig.pricingUrl;
+    document.getElementById('article-title').textContent = articleConfig.title;
+    document.getElementById('article-summary').textContent = articleConfig.summary;
+    document.getElementById('article-author').textContent = articleConfig.author;
+    const headerTarget = document.getElementById('header-target');
+    headerTarget.href = articleConfig.targetUrl;
+    headerTarget.textContent = articleConfig.targetLabel;
+    document.getElementById('publish-date').textContent = formatDate(articleConfig.published);
+    document.getElementById('publish-date').dateTime = articleConfig.published;
+
+    // 自动更新时间：使用访问当天日期；如需固定更新时间，改为指定日期字符串。
+    const updated = new Date();
+    const updateDate = updated.toISOString().slice(0, 10);
+    document.getElementById('update-date').textContent = formatDate(updateDate);
+    document.getElementById('update-date').dateTime = updateDate;
+    document.getElementById('current-year').textContent = updated.getFullYear();
+
+    const markdownSource = document.getElementById('article-markdown');
+    const markdown = markdownSource.type === 'application/json'
+      ? JSON.parse(markdownSource.textContent)
+      : markdownSource.textContent.trim().replaceAll('<\\/script>', '<' + '/script>');
+    const markdownContent = document.getElementById('markdown-content');
+    if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined') {
+      const rendered = marked.parse(markdown, { gfm: true, breaks: false });
+      markdownContent.innerHTML = DOMPurify.sanitize(rendered);
+    } else {
+      // CDN 加载失败时先显示纯文本正文，保留文章内容。
+      markdownContent.textContent = markdown;
+      markdownContent.style.whiteSpace = 'pre-wrap';
+      markdownContent.style.overflowWrap = 'anywhere';
+    }
+
+    // 动态生成 Article 结构化数据，帮助搜索引擎理解页面。
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: articleConfig.title,
+      description: articleConfig.summary,
+      author: { '@type': 'Person', name: articleConfig.author },
+      datePublished: articleConfig.published,
+      dateModified: updateDate,
+      mainEntityOfPage: { '@type': 'WebPage', '@id': articleConfig.canonical }
+    };
+    const schemaScript = document.createElement('script');
+    schemaScript.type = 'application/ld+json';
+    schemaScript.textContent = JSON.stringify(schema);
+    document.head.appendChild(schemaScript);
+  </script>
+</body>
+</html>
